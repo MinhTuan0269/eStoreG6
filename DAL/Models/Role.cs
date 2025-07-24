@@ -12,7 +12,7 @@ namespace DAL.Models
         [Key]
         public int RoleId { get; set; }
         public string RoleName { get; set; }
-
+        public bool Status { get; set; } = true;
         public ICollection<Member> Members { get; set; }
     }
 }

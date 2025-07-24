@@ -16,7 +16,7 @@ namespace DAL.Models
         public DateTime? RequiredDate { get; set; }
         public DateTime? ShippedDate { get; set; }
         public decimal? Freight { get; set; }
-
+        public bool Status { get; set; } = true;
         public Member Member { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
         public Payment Payment { get; set; }

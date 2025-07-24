@@ -15,7 +15,7 @@ namespace DAL.Models
         public string PaymentMethod { get; set; } // E.g: "CreditCard", "PayPal"
         public DateTime PaymentDate { get; set; }
         public decimal Amount { get; set; }
-
+        public bool Status { get; set; } = true;
         public Order Order { get; set; }
     }
 }

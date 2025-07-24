@@ -12,16 +12,23 @@ namespace DAL.Models
         [Key]
         public int MemberId { get; set; }
 
-        [Required] 
+        [Required]
         public string Email { get; set; }
 
         public string? CompanyName { get; set; }
         public string? City { get; set; }
         public string? Country { get; set; }
+
         public int RoleId { get; set; }
-        [Required] 
+
+        [Required]
         public string Password { get; set; }
+
         public Role Role { get; set; }
+
         public ICollection<Order> Orders { get; set; }
+
+        
+        public bool Status { get; set; } = true;
     }
 }

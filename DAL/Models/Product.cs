@@ -16,7 +16,7 @@ namespace DAL.Models
         public string Weight { get; set; }
         public decimal UnitPrice { get; set; }
         public int UnitsInStock { get; set; }
-
+        public bool Status { get; set; } = true;
         public Category Category { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
     }
