@@ -1,4 +1,8 @@
+using BLL.IServices;
+using BLL.Services;
 using DAL.DBContexts;
+using DAL.IRepositories;
+using DAL.Repositories;
 using eStoreG6.Components;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +16,10 @@ namespace eStoreG6
             builder.Services.AddDbContext<eStoreDbContext>(options =>
            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
             // Add services to the container.
+            builder.Services.AddScoped<ICateRepository, CategoryRepository>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
+
+
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
