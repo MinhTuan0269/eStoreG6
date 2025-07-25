@@ -14,9 +14,9 @@
     public int? page { get; set; }
     private List<CategoryDTO> categories = new();
     private List<ProductDTO> products = new();
-    private List<ProductDTO> filteredProducts = new(); // Thêm biến này để lưu kết quả lọc
+    private List<ProductDTO> filteredProducts = new(); 
     private int? selectedCategoryId = null;
-    private string searchKeyword = string.Empty; // Biến binding với input search
+    private string searchKeyword = string.Empty; 
    
     // Phân trang
     private int currentPage = 1;
