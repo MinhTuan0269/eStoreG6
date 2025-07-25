@@ -11,5 +11,9 @@ namespace DAL.IRepositories
     public interface ICateRepository
     {
         Task<IEnumerable<Category>> GetAllAsync(Expression<Func<Category, bool>> predicate = null);
+        Task<Category?> GetByIdAsync(int id);
+        Task AddAsync(Category category);
+        Task UpdateAsync(Category category);
+        Task SaveAsync();
     }
 }

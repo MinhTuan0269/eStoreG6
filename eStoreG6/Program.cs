@@ -1,4 +1,5 @@
 using BLL.IServices;
+using BLL.Mapping;
 using BLL.Services;
 using DAL.DBContexts;
 using DAL.IRepositories;
@@ -18,7 +19,11 @@ namespace eStoreG6
             // Add services to the container.
             builder.Services.AddScoped<ICateRepository, CategoryRepository>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
-
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<CategoryState>();
+            builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+            //builder.Services.AddAutoMapper(typeof(Program));
 
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
