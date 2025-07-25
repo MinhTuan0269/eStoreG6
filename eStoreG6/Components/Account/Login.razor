@@ -1,0 +1,365 @@
+﻿@page "/Account/Login"
+@using BLL.IServices
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using eStoreG6.Models
+@inject NavigationManager Navigation
+
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <h2 class="login-title">Welcome Back</h2>
+            <p class="login-subtitle">Sign in to your account</p>
+        </div>
+
+        <EditForm Model="@model" OnValidSubmit="HandleLogin" FormName="LoginForm" class="login-form">
+            <DataAnnotationsValidator />
+
+            <div class="form-group">
+                <label class="form-label" for="email">Email Address</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <InputText @bind-Value="model.Email"
+                               id="email"
+                               class="form-input"
+                               placeholder="Enter your email address" />
+                </div>
+                <ValidationMessage For="@(() => model.Email)" class="validation-message" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <InputText @bind-Value="model.Password"
+                               id="password"
+                               type="password"
+                               class="form-input"
+                               placeholder="Enter your password" />
+                </div>
+                <ValidationMessage For="@(() => model.Password)" class="validation-message" />
+            </div>
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="error-message">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>@errorMessage</span>
+                </div>
+            }
+
+            <div class="form-actions">
+                <button type="submit" class="btn-login" disabled="@isLoading">
+                    @if (isLoading)
+                    {
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>Signing in...</span>
+                    }
+                    else
+                    {
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Sign In</span>
+                    }
+                </button>
+            </div>
+
+            <div class="form-footer">
+                <div class="divider">
+                    <span>or</span>
+                </div>
+                <p class="signup-link">
+                    Don't have an account?
+                    <a href="/Account/SignUp" class="link-primary">Create one here</a>
+                </p>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+        padding: 20px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .login-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        width: 100%;
+        max-width: 450px;
+        padding: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .login-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .logo-container {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 32px;
+    }
+
+    .login-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #2d3748;
+        margin: 0 0 8px 0;
+    }
+
+    .login-subtitle {
+        color: #718096;
+        font-size: 16px;
+        margin: 0;
+    }
+
+    .login-form {
+        width: 100%;
+    }
+
+    .form-group {
+        margin-bottom: 24px;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .input-wrapper {
+        position: relative;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #a0aec0;
+        font-size: 16px;
+        z-index: 2;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 16px 16px 16px 48px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        background: #f7fafc;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #667eea;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-input::placeholder {
+        color: #a0aec0;
+    }
+
+    .validation-message {
+        color: #e53e3e;
+        font-size: 13px;
+        margin-top: 6px;
+        display: block;
+    }
+
+    .error-message {
+        background: #fed7d7;
+        border: 1px solid #feb2b2;
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #c53030;
+        font-size: 14px;
+    }
+
+    .form-actions {
+        margin: 32px 0 24px 0;
+    }
+
+    .btn-login {
+        width: 100%;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 16px 24px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-login:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-login:active:not(:disabled) {
+        transform: translateY(0);
+    }
+
+    .btn-login:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .form-footer {
+        text-align: center;
+    }
+
+    .divider {
+        position: relative;
+        margin: 24px 0;
+        color: #a0aec0;
+        font-size: 14px;
+    }
+
+    .divider::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: #e2e8f0;
+        z-index: 1;
+    }
+
+    .divider span {
+        background: white;
+        padding: 0 16px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .signup-link {
+        color: #718096;
+        font-size: 15px;
+        margin: 0;
+    }
+
+    .link-primary {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s ease;
+    }
+
+    .link-primary:hover {
+        color: #5a67d8;
+        text-decoration: underline;
+    }
+
+    /* Animation for spinner */
+    .fa-spin {
+        animation: fa-spin 1s infinite linear;
+    }
+</style>
+
+@code {
+    [CascadingParameter]
+    public HttpContext? HttpContext { get; set; }
+
+    [SupplyParameterFromForm]
+    private LoginView model { get; set; } = new LoginView();
+
+    private string? errorMessage;
+    private bool isLoading = false;
+
+    [Inject]
+    private IAccountService _accountService { get; set; } = default!;
+
+    private async Task HandleLogin()
+    {
+        if (isLoading) return;
+
+        isLoading = true;
+        errorMessage = null;
+        StateHasChanged();
+
+        try
+        {
+            var account = await _accountService.Authenticate(model.Email, model.Password);
+            if (account != null)
+            {
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, account.Email),
+                    new Claim(ClaimTypes.Role, account.RoleId.ToString())
+                };
+
+                var claimIndentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimIndentity));
+
+                HttpContext.Response.Cookies.Append("Email", account.Email);
+                HttpContext.Response.Cookies.Append("Role", account.RoleId.ToString());
+
+                HttpContext.Response.Redirect("/");
+            }
+            else
+            {
+                errorMessage = "Invalid email or password. Please try again.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Login error: " + ex.Message);
+            errorMessage = "An error occurred during login. Please try again.";
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+}
